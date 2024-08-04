@@ -11,31 +11,19 @@ const TaskController = {
 
       const { title, completed } = req.body;
 
-      if (!title || typeof title !== "string") {
-        return res
-          .status(400)
-          .json({ error: "Title is required and must be a string" });
-      }
-
-      if (completed === undefined || typeof completed !== "boolean") {
-        return res
-          .status(400)
-          .json({ error: "Completed is required and must be a boolean" });
-      }
-
       const newTaskId = await createTaskModel({ title, completed });
 
       res
         .status(201)
-        .json({
+        .send({
           _id: newTaskId,
           title,
           completed,
           date: new Date().toISOString(),
         });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: "Error creating the task" });
+      console.log("aqui", error);
+      res.status(500).send({msg: "Error creating the task.", error: error.message});
     }
   },
 
@@ -44,7 +32,7 @@ const TaskController = {
       const tasks = await getAllTasks();
       res.status(200).json(tasks);
     } catch (error) {
-      res.status(500).json({ error: " Error getting the tasks" });
+      res.status(500).json({ error: " Error getting the tasks." });
     }
   },
 };

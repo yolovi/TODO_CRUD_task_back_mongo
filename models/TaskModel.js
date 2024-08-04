@@ -11,8 +11,13 @@ const getTasksCollectionModel = async () => {
 };
 
 const createTaskModel = async (task) => {
-    if (typeof task.title !== "string" || typeof task.completed !== "boolean") {
-    throw new Error("Invalid task data");
+
+  if (!task.title || typeof task.title !== "string") {
+    throw new Error("Title is required and must be a string");
+  }
+
+  if (task.completed === undefined || typeof task.completed !== "boolean") {
+    throw new Error("Completed is required and must be a boolean");
   }
 
   task = {
@@ -25,6 +30,7 @@ const createTaskModel = async (task) => {
   const create = await collection.insertOne(task);
 
   return create.insertedId;
+
 };
 
 const getAllTasksModel = async () => {
